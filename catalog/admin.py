@@ -1,14 +1,15 @@
 from django.contrib import admin
 
-from .models import Author, Genre, Book, BookInstance, Language
+from .models import Author, Genre, Book, BookAuthor, BookInstance, Language
 
 admin.site.register(Genre)
 admin.site.register(Language)
+admin.site.register(BookAuthor)
 
 
-class BooksInline(admin.TabularInline):
-    """Lets you add an author's books straight from the author page."""
-    model = Book
+class BookAuthorInline(admin.TabularInline):
+    """Shows up on both Book and Author so you can link them from either side."""
+    model = BookAuthor
     extra = 0
 
 
@@ -24,14 +25,14 @@ class AuthorAdmin(admin.ModelAdmin):
 
     fields = ['first_name', 'last_name', ('date_of_birth', 'date_of_death')]
 
-    inlines = [BooksInline]
+    inlines = [BookAuthorInline]
 
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'display_genre')
+    list_display = ('title', 'display_genre')
 
-    inlines = [BooksInstanceInline]
+    inlines = [BookAuthorInline, BooksInstanceInline]
 
 
 @admin.register(BookInstance)
