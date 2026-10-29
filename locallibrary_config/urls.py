@@ -49,3 +49,10 @@ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += [
     path('accounts/', include('allauth.urls')),
 ]
+
+# Mount the Django Ninja API
+from .api import api
+
+urlpatterns += [
+    path('api/', api.urls),
+]

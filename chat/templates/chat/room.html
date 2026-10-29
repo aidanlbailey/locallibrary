@@ -9,7 +9,8 @@
 </head>
 <body>
     <form>
-        <textarea id="chat-log" cols="100" rows="20"></textarea><br>
+        <textarea id="chat-log" cols="100" rows="20">{% for chat_message in chat_messages %}{{ chat_message.content }}
+{% endfor %}</textarea><br>
         <input id="chat-message-input" type="text" size="100"><br>
         <button id="chat-message-submit" type="submit" value="Send">Send</button>
         {{ room_name|json_script:"room-name" }}
