@@ -42,6 +42,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'catalog.apps.CatalogConfig',  # This object was created for us in /catalog/apps.py
     'allauth',
     'allauth.account',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -93,6 +95,8 @@ WSGI_APPLICATION = 'locallibrary_config.wsgi.application'
 DATABASES = {
     "default": env.db(default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 }
+# NOT db.sqlite3, django deletes the test db when it's done
+DATABASES["default"]["TEST"] = {"NAME": BASE_DIR / "test_db.sqlite3"}
 
 
 # Password validation
@@ -163,3 +167,20 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 # no /accounts/profile/ page, so just go home
 LOGIN_REDIRECT_URL = '/'
+
+
+# Channels
+ASGI_APPLICATION = "locallibrary_config.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [
+                {
+                    "address": env("REDIS_URL"),
+                    "socket_timeout": env.int("REDIS_SOCKET_TIMEOUT"),
+                }
+            ],
+        },
+    },
+}

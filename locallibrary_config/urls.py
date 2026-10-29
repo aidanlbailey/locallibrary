@@ -28,6 +28,10 @@ urlpatterns += [
     path('catalog/', include('catalog.urls')),
 ]
 
+urlpatterns += [
+    path('chat/', include('chat.urls')),
+]
+
 # Add URL maps to redirect the base URL to our application
 from django.views.generic import RedirectView
 

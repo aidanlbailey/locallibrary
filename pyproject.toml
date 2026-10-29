@@ -3,6 +3,8 @@ name = "django-local-library"
 version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
+    "channels-redis>=4.3.0",
+    "channels[daphne]>=4.3.2",
     "django>=6.1.1",
     "django-allauth>=65.21.0",
     "django-environ>=0.14.0",
@@ -10,6 +12,9 @@ dependencies = [
 ]
 
 [dependency-groups]
+dev = [
+    "selenium>=4.51.0",
+]
 prod = [
     "gunicorn>=26.2.0",
     "psycopg[binary]>=3.3.6",
