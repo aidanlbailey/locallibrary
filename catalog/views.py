@@ -165,6 +165,18 @@ class BookAuthorFormSetMixin:
         return context
 
     def form_valid(self, form):
+        # no formset posted (scripts/tests hitting the url directly), so save the book on its own
+        # and take a plain `authors` list if there is one, in the order given
+        if f'{BookAuthorFormSet.get_default_prefix()}-TOTAL_FORMS' not in self.request.POST:
+            self.object = form.save()
+            author_ids = self.request.POST.getlist('authors')
+            if author_ids:
+                self.object.bookauthor_set.all().delete()
+                authors = Author.objects.in_bulk(author_ids)
+                for order, pk in enumerate(author_ids, start=1):
+                    BookAuthor.objects.create(book=self.object, author=authors[int(pk)], author_order=order)
+            return HttpResponseRedirect(self.get_success_url())
+
         author_formset = BookAuthorFormSet(self.request.POST, instance=form.instance)
         if not author_formset.is_valid():
             return self.form_invalid(form)
